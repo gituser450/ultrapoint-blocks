@@ -284,7 +284,7 @@ MempoolStatus::is_thread_running()
 }
 
 bf::path MempoolStatus::blockchain_path {"/home/mwo/.ultrapoint/lmdb"};
-string MempoolStatus::deamon_url {"http:://127.0.0.1:17071"};
+string MempoolStatus::deamon_url {"http:://127.0.0.1:17078"};
 bool   MempoolStatus::testnet {false};
 atomic<bool>       MempoolStatus::is_running {false};
 boost::thread      MempoolStatus::m_thread;
