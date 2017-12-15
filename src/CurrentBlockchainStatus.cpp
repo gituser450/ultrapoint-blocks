@@ -137,6 +137,8 @@ CurrentBlockchainStatus::calculate_emission_in_blocks(
 
         uint64_t coinbase_amount = get_outs_money_amount(blk.miner_tx);
 
+        // cout << "block: " << start_blk << " out : " << coinbase_amount << endl;
+
         std::list<transaction> txs;
         std::list<crypto::hash> missed_txs;
 
