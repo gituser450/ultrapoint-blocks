@@ -141,7 +141,7 @@ namespace xmreg
         // key images of inputs
         vector<txin_to_key> input_key_imgs;
 
-        // public keys and up amount of outputs
+        // public keys and upx amount of outputs
         vector<pair<txout_to_key, uint64_t>> output_pub_keys;
 
         mstch::map
@@ -1137,7 +1137,7 @@ namespace xmreg
             context["sum_fees"]
                     = xmreg::xmr_amount_to_str(sum_fees, "{:0.6f}");
 
-            // get up in the block reward
+            // get upx in the block reward
             context["blk_reward"]
                     = xmreg::xmr_amount_to_str(txd_coinbase.xmr_outputs - sum_fees, "{:0.6f}");
 
@@ -1451,7 +1451,7 @@ namespace xmreg
             if (!xmreg::parse_str_address(xmr_address_str,  address, testnet))
             {
                 cerr << "Cant parse string address: " << xmr_address_str << endl;
-                return string("Cant parse up address: " + xmr_address_str);
+                return string("Cant parse upx address: " + xmr_address_str);
             }
 
             // parse string representing given private key
@@ -1652,7 +1652,7 @@ namespace xmreg
 
                 // get the tx output public key
                 // that normally would be generated for us,
-                // if someone had sent us some up.
+                // if someone had sent us some upx.
                 public_key tx_pubkey;
 
                 derive_public_key(derivation,
@@ -1724,7 +1724,7 @@ namespace xmreg
 
             vector<txin_to_key> input_key_imgs = xmreg::get_key_images(tx);
 
-            // to hold sum of up in matched mixins, those that
+            // to hold sum of upx in matched mixins, those that
             // perfectly match mixin public key with outputs in mixn_tx.
             uint64_t sum_mixin_xmr {0};
 
@@ -1907,7 +1907,7 @@ namespace xmreg
 
                         // get the tx output public key
                         // that normally would be generated for us,
-                        // if someone had sent us some up.
+                        // if someone had sent us some upx.
                         public_key tx_pubkey_generated;
 
                         derive_public_key(derivation,
@@ -1983,7 +1983,7 @@ namespace xmreg
                                 continue;
                             }
 
-                            // sum up only first output matched found in each input
+                            // sum upx only first output matched found in each input
                             if (no_of_output_matches_found == 0)
                             {
                                 // for regular txs, just concentrated on outputs
@@ -2655,7 +2655,7 @@ namespace xmreg
                     // mark that we have signed tx data for use in mstch
                     tx_context["have_raw_tx"] = true;
 
-                    // provide total mount of inputs up
+                    // provide total mount of inputs upx
                     tx_context["inputs_xmr_sum"] = xmreg::xmr_amount_to_str(inputs_xmr_sum);
 
                     // get reference to inputs array created of the tx
@@ -3041,7 +3041,7 @@ namespace xmreg
 
             }
 
-            // get up address stored in this key image file
+            // get upx address stored in this key image file
             const account_public_address* xmr_address =
                     reinterpret_cast<const account_public_address*>(
                             decoded_raw_data.data());
@@ -3169,7 +3169,7 @@ namespace xmreg
             // header is public spend and keys
             const size_t header_lenght    = 2 * sizeof(crypto::public_key);
 
-            // get up address stored in this key image file
+            // get upx address stored in this key image file
             const account_public_address* xmr_address =
                     reinterpret_cast<const account_public_address*>(
                             decoded_raw_data.data());
@@ -4588,7 +4588,7 @@ namespace xmreg
 
                 // get the tx output public key
                 // that normally would be generated for us,
-                // if someone had sent us some up.
+                // if someone had sent us some upx.
                 public_key tx_pubkey;
 
                 derive_public_key(derivation,
@@ -5329,7 +5329,7 @@ namespace xmreg
             txd.pk = xmreg::get_tx_pub_key_from_received_outs(tx);
 
 
-            // sum up in inputs and ouputs in the given tx
+            // sum upx in inputs and ouputs in the given tx
             const array<uint64_t, 4>& sum_data = summary_of_in_out_rct(
                     tx, txd.output_pub_keys, txd.input_key_imgs);
 
