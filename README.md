@@ -179,7 +179,7 @@ ultrapoint-blocks, Onion Ultrapoint Blockchain Explorer:
                                         functionality
   --ssl-key-file arg                    path to key file for ssl (https) 
                                         functionality
-  -d [ --deamon-url ] arg (=http:://127.0.0.1:17080)
+  -d [ --deamon-url ] arg (=http:://127.0.0.1:17090)
                                         Ultrapoint deamon url
 ```
 
