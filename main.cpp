@@ -253,6 +253,12 @@ main(int ac, const char* av[])
     // crow instance
     crow::SimpleApp app;
 
+    // get domian url based on the request
+    auto get_domain = [&use_ssl](crow::request const& req) {
+        return (use_ssl ? "https://" : "http://")
+               + req.get_header_value("Host");
+    };
+
     CROW_ROUTE(app, "/")
     ([&](const crow::request& req) {
         return crow::response(xmrblocks.index2());
@@ -304,8 +310,22 @@ main(int ac, const char* av[])
         // using tx pusher
         string raw_tx_data = post_body["raw_tx_data"];
 
+        string domain      =  get_domain(req);
+
         return xmrblocks.show_my_outputs(tx_hash, xmr_address,
-                                         viewkey, raw_tx_data);
+                                         viewkey, raw_tx_data,
+                                         domain);
+    });
+
+    CROW_ROUTE(app, "/myoutputs/<string>/<string>/<string>")
+    ([&](const crow::request& req, string tx_hash,
+         string xmr_address, string viewkey) {
+
+        string domain = get_domain(req);
+
+        return xmrblocks.show_my_outputs(tx_hash, xmr_address,
+                                         viewkey, string {},
+                                         domain);
     });
 
     CROW_ROUTE(app, "/prove").methods("POST"_method)
@@ -326,7 +346,21 @@ main(int ac, const char* av[])
             string tx_prv_key  = post_body["txprvkey"];;
             string xmr_address = post_body["xmraddress"];;
 
-            return xmrblocks.show_prove(tx_hash, xmr_address, tx_prv_key);
+            string domain      = get_domain(req);
+
+            return xmrblocks.show_prove(tx_hash, xmr_address,
+                                        tx_prv_key, domain);
+    });
+
+
+    CROW_ROUTE(app, "/prove/<string>/<string>/<string>")
+    ([&](const crow::request& req, string tx_hash,
+         string xmr_address, string tx_prv_key) {
+
+        string domain = get_domain(req);
+
+        return xmrblocks.show_prove(tx_hash, xmr_address,
+                                    tx_prv_key, domain);
     });
 
     if (enable_pusher)
@@ -431,10 +465,16 @@ main(int ac, const char* av[])
         return xmrblocks.mempool(true);
     });
 
-    CROW_ROUTE(app, "/altblocks")
+    // alias to  "/mempool"
+    CROW_ROUTE(app, "/txpool")
     ([&](const crow::request& req) {
-        return xmrblocks.altblocks();
+        return xmrblocks.mempool(true);
     });
+
+//    CROW_ROUTE(app, "/altblocks")
+//    ([&](const crow::request& req) {
+//        return xmrblocks.altblocks();
+//    });
 
     CROW_ROUTE(app, "/robots.txt")
     ([&]() {
@@ -561,6 +601,45 @@ main(int ac, const char* av[])
 
             return r;
         });
+
+        CROW_ROUTE(app, "/api/outputsblocks").methods("GET"_method)
+        ([&](const crow::request &req) {
+
+            string limit = regex_search(req.raw_url, regex {"limit=\\d+"}) ?
+                           req.url_params.get("limit") : "3";
+
+            string address = regex_search(req.raw_url, regex {"address=\\w+"}) ?
+                             req.url_params.get("address") : "";
+
+            string viewkey = regex_search(req.raw_url, regex {"viewkey=\\w+"}) ?
+                             req.url_params.get("viewkey") : "";
+
+            bool in_mempool_aswell {false};
+
+            try
+            {
+                in_mempool_aswell = regex_search(req.raw_url, regex {"mempool=[01]"}) ?
+                           boost::lexical_cast<bool>(req.url_params.get("mempool")) :
+                           false;
+            }
+            catch (const boost::bad_lexical_cast &e)
+            {
+                cerr << "Cant parse tx_prove as bool. Using default value" << endl;
+            }
+
+            myxmr::jsonresponse r{xmrblocks.json_outputsblocks(limit, address, viewkey, in_mempool_aswell)};
+
+            return r;
+        });
+
+        CROW_ROUTE(app, "/api/version")
+        ([&](const crow::request &req) {
+
+            myxmr::jsonresponse r{xmrblocks.json_version()};
+
+            return r;
+        });
+
     }
 
     if (enable_autorefresh_option)

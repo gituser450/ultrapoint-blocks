@@ -10,7 +10,12 @@
     {{/has_payment_id}}
 
     {{#has_payment_id8}}
-        <H5 style="margin:5px">Payment id (encrypted): {{payment_id8}}</H5>
+        {{^decrypted_payment_id8}}
+            <H5 style="margin:5px">Payment id (encrypted): {{payment_id8}}</H5>
+        {{/decrypted_payment_id8}}
+        {{#decrypted_payment_id8}}
+            <H5 style="margin:5px">Payment id (decrypted): {{decrypted_payment_id8}}</H5>
+        {{/decrypted_payment_id8}}
     {{/has_payment_id8}}
 
 
@@ -71,6 +76,9 @@
                 0.000000000000
             {{/found_our_outputs}}
         </h3>
+        <h4>
+            <a href="{{shortcut_url}}" target="_blank">link to this page</a>
+        </h4>
 
     </div>
 
